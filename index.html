@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>BioRegex Studio — Regular Expressions for Bioinformatics</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="nav">
+  <a class="brand" href="#home">BioRegex Studio</a>
+
+  <nav>
+    <a href="#guide">Quick Guide</a>
+    <a href="#motif">App 1</a>
+    <a href="#phospho">App 2</a>
+    <a href="#dna">App 3</a>
+    <a href="#restriction">App 4</a>
+    <a href="#rna">App 5</a>
+  </nav>
+
+  <button class="btn glossary-btn" id="openGlossary">Glossary</button>
+</header>
+
+<main>
+
+<!-- HOME PAGE -->
+
+<section class="hero" id="home">
+  <h1>BioRegex Studio</h1>
+  <p class="sub">Regular Expressions for Bioinformatics</p>
+
+  <p>
+    Regular expressions are used to describe patterns in sequences of symbols.
+    In bioinformatics, these patterns can help identify specific arrangements
+    of amino acids in proteins or nucleotides in DNA.
+  </p>
+
+  <p>
+    This project demonstrates how regular expressions can be applied to five
+    biological problems: protein motif mimicry detection, protein modification
+    site identification, regulatory DNA motif detection, DNA restriction site
+    identification, and RNA start codon identification.
+  </p>
+
+  <ul>
+    <li>Understand biological alphabets and sequences.</li>
+    <li>Learn how regular expressions describe patterns.</li>
+    <li>Test patterns against biological sequences.</li>
+    <li>Upload your own DFA or NFA diagrams.</li>
+  </ul>
+
+  <a class="btn primary" href="#motif">Explore the applications</a>
+
+  <p class="disclaimer">
+    A pattern match is a useful clue, not proof of biological function.
+  </p>
+</section>
+
+
+<!-- QUICK GUIDE -->
+
+<section class="guide" id="guide">
+  <h2>Quick Guide</h2>
+
+  <ul>
+    <li>
+      <b>Alphabet (Σ):</b>
+      A finite set of symbols used to form strings.
+      DNA uses Σd = {A, C, G, T}.
+      Protein sequences use the 20 standard amino-acid symbols.
+    </li>
+
+    <li>
+      <b>String:</b>
+      A sequence of symbols from an alphabet.
+      For example, ACGT is a DNA string.
+    </li>
+
+    <li>
+      <b>Union (+):</b>
+      Choosing between alternatives.
+      For example, A + C means either A or C in formal TOC notation.
+    </li>
+
+    <li>
+      <b>Concatenation:</b>
+      Patterns appear one after another.
+      For example, AC means A followed by C.
+    </li>
+
+    <li>
+      <b>Kleene star (*):</b>
+      Zero or more repetitions.
+      For example, A* includes ε, A, AA, AAA, and so on.
+    </li>
+
+    <li>
+      <b>Empty string (ε):</b>
+      A string containing no symbols.
+    </li>
+
+    <li>
+      <b>DFA:</b>
+      A deterministic finite automaton with one next state
+      for each state and input symbol.
+    </li>
+
+    <li>
+      <b>NFA:</b>
+      A nondeterministic finite automaton that can have
+      multiple possible next states.
+    </li>
+  </ul>
+
+  <p class="muted">
+    Formal TOC notation and programming regex syntax (used by the testers here)
+    are related ways of describing patterns, but they are not identical in
+    every detail. For example, [AT] in programming syntax corresponds to
+    A + T in formal notation.
+  </p>
+</section>
+
+
+<!-- APPLICATION 1 -->
+
+<section class="app"
+  id="motif"
+  data-app="motif"
+  data-regex="[KR].{1,2}[ST].{1,3}[LIV]"
+  data-alpha="protein"
+  data-default="MAKASALPQ"
+  style="--accent:#2f7d57">
+
+  <div class="app-head">
+    <span class="badge">Application 1</span>
+    <h2>Protein Motif Mimicry Detection</h2>
+  </div>
+
+  <div class="grid">
+
+    <div class="col">
+
+      <p>
+        Proteins are chains of amino acids. A protein
+        <span class="tip" tabindex="0"
+          data-tip="A short, recognizable pattern in a sequence.">motif</span>
+        is a short, recognizable pattern in a protein sequence.
+        Sometimes a pathogen protein contains a pattern resembling one found
+        in a host protein. Finding a similar pattern can help researchers
+        investigate possible molecular mimicry. However, a matching pattern
+        alone does not prove that the proteins have the same function or that
+        mimicry is occurring.
+      </p>
+
+      <h3>Objective</h3>
+      <p>
+        Identify protein sequences containing a specified amino-acid pattern
+        using a regular expression.
+      </p>
+
+      <h3>Alphabet</h3>
+      <p class="mono">
+        Σp = {A, C, D, E, F, G, H, I, K, L, M, N, P, Q, R, S, T, V, W, Y}
+      </p>
+
+      <h3>Regular expression</h3>
+      <div class="regex" aria-label="Regular expression">
+        [KR].{1,2}[ST].{1,3}[LIV]
+      </div>
+
+      <ul class="parts">
+        <li>
+          <code>[KR]</code> — The first matched character must be K or R.
+        </li>
+        <li>
+          <code>.{1,2}</code> — The next part contains one or two characters.
+        </li>
+        <li>
+          <code>[ST]</code> — The next specified position must be S or T.
+        </li>
+        <li>
+          <code>.{1,3}</code> — The next part contains one to three characters.
+        </li>
+        <li>
+          <code>[LIV]</code> — The match ends with L, I, or V.
+        </li>
+      </ul>
+
+      <p class="muted">
+        The dot and repetition syntax above uses programming-regex conventions.
+      </p>
+
+      <h3>Worked example</h3>
+
+      <p>
+        Input: <code>MAKASALPQ</code> →
+        Expected match: <code>KASAL</code>
+      </p>
+
+      <ul>
+        <li>K satisfies <code>[KR]</code>.</li>
+        <li>A satisfies the first wildcard segment.</li>
+        <li>S satisfies <code>[ST]</code>.</li>
+        <li>A satisfies the second wildcard segment.</li>
+        <li>L satisfies <code>[LIV]</code>.</li>
+        <li>The entire substring <b>KASAL</b> matches the expression.</li>
+      </ul>
+
+      <h3>Why is this useful?</h3>
+
+      <ul>
+        <li>Searches long protein sequences for specified patterns.</li>
+        <li>Provides a first screening step for candidate motifs.</li>
+        <li>Demonstrates how biological rules can be represented as regular expressions.</li>
+        <li>Illustrates pattern recognition from Theory of Computation.</li>
+      </ul>
+
+    </div>
+
+    <div class="col">
+
+      <div class="card tester">
+        <h3>Try it yourself</h3>
+
+        <div class="regex small">
+          [KR].{1,2}[ST].{1,3}[LIV]
+        </div>
+
+        <label for="in-motif">Sequence</label>
+
+        <textarea id="in-motif" rows="3"
+          spellcheck="false"
+          autocomplete="off">MAKASALPQ</textarea>
+
+        <div class="btns">
+          <button class="btn primary" data-act="find">Find Matches</button>
+          <button class="btn" data-act="reset">Reset</button>
+        </div>
+
+        <div class="result" aria-live="polite"></div>
+      </div>
+
+      <div class="card diagram">
+        <h3>Your DFA / NFA Diagram</h3>
+
+        <div class="preview">
+          <p class="empty">
+            No diagram yet. Create or find your own DFA/NFA image and upload it
+            here (PNG, JPG, JPEG or WebP).
+          </p>
+
+          <img alt="Your DFA/NFA diagram for Protein Motif Mimicry Detection" hidden>
+        </div>
+
+        <div class="btns">
+          <button class="btn primary" data-act="choose">Choose Image</button>
+          <button class="btn" data-act="remove">Remove Image</button>
+        </div>
+
+        <input type="file" accept="image/png,image/jpeg,image/webp" hidden>
+
+        <p class="muted msg" aria-live="polite">
+          Images stay in your browser only and are never uploaded to a server.
+          Clearing browser data will remove them.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- APPLICATION 2 -->
+
+<section class="app"
+  id="phospho"
+  data-app="phospho"
+  data-regex="[STY]"
+  data-alpha="protein"
+  data-default="MACKSTYAL"
+  style="--accent:#b7791f">
+
+  <div class="app-head">
+    <span class="badge">Application 2</span>
+    <h2>Protein Modification Site Identification</h2>
+  </div>
+
+  <div class="grid">
+
+    <div class="col">
+
+      <p>
+        Proteins can undergo chemical changes after they are produced.
+        These changes are called post-translational modifications.
+        One example is
+        <span class="tip" tabindex="0"
+          data-tip="Adding a phosphate group to a molecule, such as a protein.">
+          phosphorylation
+        </span>,
+        in which a phosphate group is added to a molecule such as a protein.
+        Phosphorylation commonly involves the amino acids serine (S),
+        threonine (T), and tyrosine (Y).
+
+        <br><br>
+
+        A regular expression can locate these amino acids in a protein sequence.
+        Finding one does not confirm that phosphorylation actually occurs.
+      </p>
+
+      <h3>Objective</h3>
+      <p>
+        Find candidate positions containing amino acids commonly associated
+        with phosphorylation.
+      </p>
+
+      <h3>Alphabet</h3>
+      <p class="mono">
+        Σp = {A, C, D, E, F, G, H, I, K, L, M, N, P, Q, R, S, T, V, W, Y}
+      </p>
+
+      <h3>Regular expression</h3>
+      <div class="regex" aria-label="Regular expression">[STY]</div>
+
+      <ul class="parts">
+        <li>
+          <code>[STY]</code> — Matches exactly one character: S, T, or Y.
+          S = serine, T = threonine, Y = tyrosine.
+          Each match is a candidate position for further investigation,
+          not a confirmed modification site.
+        </li>
+      </ul>
+
+      <h3>Worked example</h3>
+
+      <p>
+        Input: <code>MACKSTYAL</code> →
+        Expected match: <code>S, T and Y</code>
+      </p>
+
+      <ul>
+        <li>
+          All three symbols match because each is an allowed character
+          in <code>[STY]</code>.
+        </li>
+      </ul>
+
+      <h3>Why is this useful?</h3>
+
+      <ul>
+        <li>Identifies occurrences of selected amino acids.</li>
+        <li>Helps screen sequences for candidate positions.</li>
+        <li>Demonstrates how a short regex can recognize a biological feature.</li>
+        <li>Provides a simple example of sequence scanning.</li>
+      </ul>
+
+    </div>
+
+    <div class="col">
+
+      <div class="card tester">
+        <h3>Try it yourself</h3>
+
+        <div class="regex small">[STY]</div>
+
+        <label for="in-phospho">Sequence</label>
+
+        <textarea id="in-phospho" rows="3"
+          spellcheck="false"
+          autocomplete="off">MACKSTYAL</textarea>
+
+        <div class="btns">
+          <button class="btn primary" data-act="find">Find Matches</button>
+          <button class="btn" data-act="reset">Reset</button>
+        </div>
+
+        <div class="result" aria-live="polite"></div>
+      </div>
+
+      <div class="card diagram">
+        <h3>Your DFA / NFA Diagram</h3>
+
+        <div class="preview">
+          <p class="empty">
+            No diagram yet. Create or find your own DFA/NFA image and upload it
+            here (PNG, JPG, JPEG or WebP).
+          </p>
+
+          <img alt="Your DFA/NFA diagram for Protein Modification Site Identification" hidden>
+        </div>
+
+        <div class="btns">
+          <button class="btn primary" data-act="choose">Choose Image</button>
+          <button class="btn" data-act="remove">Remove Image</button>
+        </div>
+
+        <input type="file" accept="image/png,image/jpeg,image/webp" hidden>
+
+        <p class="muted msg" aria-live="polite">
+          Images stay in your browser only and are never uploaded to a server.
+          Clearing browser data will remove them.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- APPLICATION 3 -->
+
+<section class="app"
+  id="dna"
+  data-app="dna"
+  data-regex="TATA[AT]A[AT]"
+  data-alpha="dna"
+  data-default="GCTATAAAAGC"
+  style="--accent:#2b6c9b">
+
+  <div class="app-head">
+    <span class="badge">Application 3</span>
+    <h2>Regulatory DNA Motif Detection</h2>
+  </div>
+
+  <div class="grid">
+
+    <div class="col">
+
+      <p>
+        DNA contains instructions that help control how genes work.
+        Some proteins bind to specific DNA regions and influence gene expression.
+        A
+        <span class="tip" tabindex="0"
+          data-tip="A short DNA pattern that a regulatory protein may recognize.">
+          regulatory DNA motif
+        </span>
+        is a short sequence pattern that may be recognized by a regulatory protein.
+
+        <br><br>
+
+        Researchers can search DNA sequences for candidate motifs and compare
+        their occurrence across different organisms.
+        A pattern match alone does not prove that a region regulates a gene.
+      </p>
+
+      <h3>Objective</h3>
+      <p>
+        Find DNA sequences containing a specified nucleotide pattern.
+      </p>
+
+      <h3>Alphabet</h3>
+      <p class="mono">Σd = {A, C, G, T}</p>
+
+      <h3>Regular expression</h3>
+      <div class="regex" aria-label="Regular expression">
+        TATA(A+T)A(A+T)
+      </div>
+
+      <ul class="parts">
+        <li>
+          <code>TATA</code> — These four nucleotides must appear in order.
+        </li>
+        <li>
+          <code>[AT]</code> — The next nucleotide can be A or T.
+        </li>
+        <li>
+          <code>A</code> — The following nucleotide must be A.
+        </li>
+        <li>
+          <code>[AT]</code> — The final nucleotide can be A or T.
+        </li>
+      </ul>
+
+      <h3>Worked example</h3>
+
+      <p>
+        Input: <code>GCTATAAAAGC</code> →
+        Expected match: <code>TATAAAA</code>
+      </p>
+
+      <ul>
+        <li>
+          The substring starts with TATA, followed by A, A, and A.
+          These positions satisfy the pattern.
+        </li>
+      </ul>
+
+      <h3>Why is this useful?</h3>
+
+      <ul>
+        <li>Searches DNA for a specified nucleotide pattern.</li>
+        <li>Helps compare candidate motifs across sequences.</li>
+        <li>Demonstrates regular expressions on a four-symbol alphabet.</li>
+        <li>Illustrates formal pattern recognition in biology.</li>
+      </ul>
+
+    </div>
+
+    <div class="col">
+
+      <div class="card tester">
+        <h3>Try it yourself</h3>
+
+        <div class="regex small">TATA(A+T)A(A+T)</div>
+
+        <label for="in-dna">Sequence</label>
+
+        <textarea id="in-dna" rows="3"
+          spellcheck="false"
+          autocomplete="off">GCTATAAAAGC</textarea>
+
+        <div class="btns">
+          <button class="btn primary" data-act="find">Find Matches</button>
+          <button class="btn" data-act="reset">Reset</button>
+        </div>
+
+        <div class="result" aria-live="polite"></div>
+      </div>
+
+      <div class="card diagram">
+        <h3>Your DFA / NFA Diagram</h3>
+
+        <div class="preview">
+          <p class="empty">
+            No diagram yet. Create or find your own DFA/NFA image and upload it
+            here (PNG, JPG, JPEG or WebP).
+          </p>
+
+          <img alt="Your DFA/NFA diagram for Regulatory DNA Motif Detection" hidden>
+        </div>
+
+        <div class="btns">
+          <button class="btn primary" data-act="choose">Choose Image</button>
+          <button class="btn" data-act="remove">Remove Image</button>
+        </div>
+
+        <input type="file" accept="image/png,image/jpeg,image/webp" hidden>
+
+        <p class="muted msg" aria-live="polite">
+          Images stay in your browser only and are never uploaded to a server.
+          Clearing browser data will remove them.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- APPLICATION 4 -->
+
+<section class="app"
+  id="restriction"
+  data-app="restriction"
+  data-regex="GAATTC"
+  data-alpha="dna"
+  data-default="CCGGAATTCTTA"
+  style="--accent:#8b5a9f">
+
+  <div class="app-head">
+    <span class="badge">Application 4</span>
+    <h2>DNA Restriction Site Identification</h2>
+  </div>
+
+  <div class="grid">
+
+    <div class="col">
+
+      <p>
+        Restriction enzymes are proteins that recognize specific DNA sequences
+        and cut DNA at or near those locations.
+        These enzymes are commonly used in genetic engineering and molecular biology.
+        For example, the restriction enzyme EcoRI recognizes the DNA sequence
+        GAATTC. A regular expression can help locate this sequence in a longer
+        DNA string.
+      </p>
+
+      <h3>Objective</h3>
+      <p>
+        Identify DNA sequences containing a specific restriction enzyme
+        recognition site using a regular expression.
+      </p>
+
+      <h3>Alphabet</h3>
+      <p class="mono">Σd = {A, C, G, T}</p>
+
+      <h3>Regular expression</h3>
+      <div class="regex" aria-label="Regular expression">GAATTC</div>
+
+      <ul class="parts">
+        <li><code>G</code> — The first nucleotide must be G.</li>
+        <li><code>A</code> — The second and third nucleotides must be A.</li>
+        <li><code>T</code> — The fourth and fifth nucleotides must be T.</li>
+        <li><code>C</code> — The final nucleotide must be C.</li>
+      </ul>
+
+      <h3>Worked example</h3>
+
+      <p>
+        Input: <code>CCGGAATTCTTA</code> →
+        Expected match: <code>GAATTC</code>
+      </p>
+
+      <ul>
+        <li>The substring <code>GAATTC</code> appears in the input sequence.</li>
+        <li>All six nucleotides match the required pattern.</li>
+      </ul>
+
+      <h3>Why is this useful?</h3>
+
+      <ul>
+        <li>Identifies restriction enzyme recognition sites.</li>
+        <li>Helps locate specific DNA cutting regions.</li>
+        <li>Demonstrates exact sequence matching using regular expressions.</li>
+        <li>Provides an example of pattern recognition in genetic engineering.</li>
+      </ul>
+
+    </div>
+
+    <div class="col">
+
+      <div class="card tester">
+        <h3>Try it yourself</h3>
+
+        <div class="regex small">GAATTC</div>
+
+        <label for="in-restriction">Sequence</label>
+
+        <textarea id="in-restriction" rows="3"
+          spellcheck="false"
+          autocomplete="off">CCGGAATTCTTA</textarea>
+
+        <div class="btns">
+          <button class="btn primary" data-act="find">Find Matches</button>
+          <button class="btn" data-act="reset">Reset</button>
+        </div>
+
+        <div class="result" aria-live="polite"></div>
+      </div>
+
+      <div class="card diagram">
+        <h3>Your DFA / NFA Diagram</h3>
+
+        <div class="preview">
+          <p class="empty">
+            No diagram yet. Create or find your own DFA/NFA image and upload it
+            here (PNG, JPG, JPEG or WebP).
+          </p>
+
+          <img alt="Your DFA/NFA diagram for DNA Restriction Site Identification" hidden>
+        </div>
+
+        <div class="btns">
+          <button class="btn primary" data-act="choose">Choose Image</button>
+          <button class="btn" data-act="remove">Remove Image</button>
+        </div>
+
+        <input type="file" accept="image/png,image/jpeg,image/webp" hidden>
+
+        <p class="muted msg" aria-live="polite">
+          Images stay in your browser only and are never uploaded to a server.
+          Clearing browser data will remove them.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- APPLICATION 5 -->
+
+<section class="app"
+  id="rna"
+  data-app="rna"
+  data-regex="AUG"
+  data-alpha="rna"
+  data-default="CCGAUGGCUAUG"
+  style="--accent:#a34d65">
+
+  <div class="app-head">
+    <span class="badge">Application 5</span>
+    <h2>RNA Start Codon Identification</h2>
+  </div>
+
+  <div class="grid">
+
+    <div class="col">
+
+      <p>
+        RNA contains genetic information used by cells to produce proteins.
+        Protein synthesis generally begins at a start codon.
+        The most common start codon is AUG, which codes for the amino acid
+        methionine. A regular expression can locate AUG occurrences in an
+        RNA sequence. Finding AUG alone does not confirm that translation
+        actually begins at that position.
+      </p>
+
+      <h3>Objective</h3>
+      <p>
+        Identify potential start codons in an RNA sequence using a
+        regular expression.
+      </p>
+
+      <h3>Alphabet</h3>
+      <p class="mono">Σr = {A, C, G, U}</p>
+
+      <h3>Regular expression</h3>
+      <div class="regex" aria-label="Regular expression">AUG</div>
+
+      <ul class="parts">
+        <li><code>A</code> — The first nucleotide must be A.</li>
+        <li><code>U</code> — The second nucleotide must be U.</li>
+        <li><code>G</code> — The third nucleotide must be G.</li>
+        <li><code>AUG</code> — Represents the common start codon in RNA.</li>
+      </ul>
+
+      <h3>Worked example</h3>
+
+      <p>
+        Input: <code>CCGAUGGCUAUG</code> →
+        Expected matches: <code>AUG and AUG</code>
+      </p>
+
+      <ul>
+        <li>The first <code>AUG</code> appears at positions 4–6.</li>
+        <li>The second <code>AUG</code> appears at positions 10–12.</li>
+        <li>Both occurrences match the required pattern.</li>
+      </ul>
+
+      <h3>Why is this useful?</h3>
+
+      <ul>
+        <li>Identifies potential start codons in RNA sequences.</li>
+        <li>Helps locate candidate protein translation starting positions.</li>
+        <li>Demonstrates exact sequence matching using regular expressions.</li>
+        <li>Provides a simple example of pattern recognition in molecular biology.</li>
+      </ul>
+
+    </div>
+
+    <div class="col">
+
+      <div class="card tester">
+        <h3>Try it yourself</h3>
+
+        <div class="regex small">AUG</div>
+
+        <label for="in-rna">Sequence</label>
+
+        <textarea id="in-rna" rows="3"
+          spellcheck="false"
+          autocomplete="off">CCGAUGGCUAUG</textarea>
+
+        <div class="btns">
+          <button class="btn primary" data-act="find">Find Matches</button>
+          <button class="btn" data-act="reset">Reset</button>
+        </div>
+
+        <div class="result" aria-live="polite"></div>
+      </div>
+
+      <div class="card diagram">
+        <h3>Your DFA / NFA Diagram</h3>
+
+        <div class="preview">
+          <p class="empty">
+            No diagram yet. Create or find your own DFA/NFA image and upload it
+            here (PNG, JPG, JPEG or WebP).
+          </p>
+
+          <img alt="Your DFA/NFA diagram for RNA Start Codon Identification" hidden>
+        </div>
+
+        <div class="btns">
+          <button class="btn primary" data-act="choose">Choose Image</button>
+          <button class="btn" data-act="remove">Remove Image</button>
+        </div>
+
+        <input type="file" accept="image/png,image/jpeg,image/webp" hidden>
+
+        <p class="muted msg" aria-live="polite">
+          Images stay in your browser only and are never uploaded to a server.
+          Clearing browser data will remove them.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- FINAL SECTION -->
+
+<section class="final">
+  <h2>Patterns make sequences searchable.</h2>
+
+  <p>
+    Regular expressions describe which strings match a rule.
+    A tester can show where a pattern occurs, while an automaton diagram
+    gives a visual model of how the pattern can be recognized.
+  </p>
+
+  <a class="btn primary" href="#home">Back to Top</a>
+</section>
+
+</main>
+
+
+<!-- GLOSSARY -->
+
+<dialog id="glossary">
+
+  <div class="dlg-head">
+    <h2>Glossary</h2>
+    <button class="btn" id="closeGlossary" aria-label="Close glossary">
+      ✕ Close
+    </button>
+  </div>
+
+  <dl>
+
+    <dt>Amino acid</dt>
+    <dd>A building block that joins with others to form a protein.</dd>
+
+    <dt>DNA nucleotide</dt>
+    <dd>One of the four DNA symbols A, C, G, and T.</dd>
+
+    <dt>Motif</dt>
+    <dd>A short, recognizable sequence pattern that may be biologically meaningful.</dd>
+
+    <dt>Regular expression</dt>
+    <dd>A formal way to describe a set of strings or sequence patterns.</dd>
+
+    <dt>Pattern matching</dt>
+    <dd>Checking whether a sequence contains a substring that follows a specified rule.</dd>
+
+    <dt>DFA</dt>
+    <dd>A deterministic finite automaton.</dd>
+
+    <dt>NFA</dt>
+    <dd>A nondeterministic finite automaton.</dd>
+
+    <dt>Accepting state</dt>
+    <dd>A state representing successful recognition of a pattern under the automaton's rules.</dd>
+
+    <dt>Phosphorylation</dt>
+    <dd>A chemical modification involving the addition of a phosphate group.</dd>
+
+    <dt>Biological candidate</dt>
+    <dd>A sequence that matches a pattern but still needs biological validation.</dd>
+
+  </dl>
+
+</dialog>
+
+<script src="script.js"></script>
+
+</body>
+</html>
